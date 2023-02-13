@@ -4,9 +4,10 @@ use cosmwasm_std::Coin;
 use prost::Message;
 use test_tube::account::SigningAccount;
 
+use test_tube::bindings::WhitelistAddressForForceUnlock;
 use test_tube::runner::result::{RunnerExecuteResult, RunnerResult};
 use test_tube::runner::Runner;
-use test_tube::BaseApp;
+use test_tube::{redefine_as_go_string, BaseApp};
 
 const FEE_DENOM: &str = "uosmo";
 const OSMO_ADDRESS_PREFIX: &str = "osmo";
@@ -33,6 +34,14 @@ impl OsmosisTestApp {
                 OSMO_ADDRESS_PREFIX,
                 DEFAULT_GAS_ADJUSTMENT,
             ),
+        }
+    }
+
+    /// Whitelist an address for force unlock
+    pub fn whitelist_address_for_force_unlock(&self, address: &str) {
+        redefine_as_go_string!(address);
+        unsafe {
+            WhitelistAddressForForceUnlock(self.inner.id(), address);
         }
     }
 

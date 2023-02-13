@@ -44,6 +44,10 @@ impl BaseApp {
         }
     }
 
+    pub fn id(&self) -> u64 {
+        self.id
+    }
+
     /// Increase the time of the blockchain by the given number of seconds.
     pub fn increase_time(&self, seconds: u64) {
         unsafe {
