@@ -6,6 +6,7 @@ use prost::Message;
 use test_tube::account::SigningAccount;
 
 use test_tube::bindings::AddSuperfluidLPShare;
+use test_tube::bindings::WhitelistAddressForForceUnlock;
 use test_tube::runner::result::{RunnerExecuteResult, RunnerResult};
 use test_tube::runner::Runner;
 use test_tube::{redefine_as_go_string, BaseApp};
@@ -53,6 +54,14 @@ impl OsmosisTestApp {
     /// Get the first validator address
     pub fn get_first_validator_address(&self) -> RunnerResult<String> {
         self.inner.get_first_validator_address()
+    }
+
+    /// Whitelist an address for force unlock
+    pub fn whitelist_address_for_force_unlock(&self, address: &str) {
+        redefine_as_go_string!(address);
+        unsafe {
+            WhitelistAddressForForceUnlock(self.inner.id(), address);
+        }
     }
 
     /// Increase the time of the blockchain by the given number of seconds.
