@@ -9,8 +9,8 @@ use prost::Message;
 
 use crate::account::{Account, FeeSetting, SigningAccount};
 use crate::bindings::{
-    AccountNumber, AccountSequence, BeginBlock, EndBlock, Execute, InitAccount, InitTestEnv, Query,
-    Simulate,
+    AccountNumber, AccountSequence, BeginBlock, EndBlock, Execute, IncreaseTime, InitAccount,
+    InitTestEnv, Query, Simulate,
 };
 use crate::redefine_as_go_string;
 use crate::runner::error::{DecodeError, EncodeError, RunnerError};
@@ -41,6 +41,13 @@ impl BaseApp {
             chain_id: chain_id.to_string(),
             address_prefix: address_prefix.to_string(),
             default_gas_adjustment,
+        }
+    }
+
+    /// Increase the time of the blockchain by the given number of seconds.
+    pub fn increase_time(&self, seconds: u64) {
+        unsafe {
+            IncreaseTime(self.id, seconds.try_into().unwrap());
         }
     }
 
