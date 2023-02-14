@@ -1,11 +1,15 @@
 use cosmrs::rpc::error::Error as TendermintRpcError;
 use cosmrs::tendermint::Error as TendermintError;
 use cosmrs::ErrorReport;
+use cosmwasm_std::StdError;
 use std::str::Utf8Error;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum RunnerError {
+    #[error("{0}")]
+    Std(#[from] StdError),
+
     #[error("unable to encode request")]
     EncodeError(#[from] EncodeError),
 
