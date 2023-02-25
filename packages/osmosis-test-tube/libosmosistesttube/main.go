@@ -238,6 +238,12 @@ func Simulate(envId uint64, base64TxBytes string) *C.char { // => base64GasInfo
 	return encodeBytesResultBytes(bz)
 }
 
+//export GetValidatorAddress
+func GetValidatorAddress(envId uint64) *C.char {
+	env := loadEnv(envId)
+	return C.CString(env.GetValidatorAddress())
+}
+
 // ========= utils =========
 
 func loadEnv(envId uint64) testenv.TestEnv {

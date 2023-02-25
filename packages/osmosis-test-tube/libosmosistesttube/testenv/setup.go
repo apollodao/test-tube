@@ -117,6 +117,10 @@ func (env *TestEnv) BeginNewBlock(executeNextEpoch bool, timeIncreaseSeconds uin
 	env.beginNewBlockWithProposer(executeNextEpoch, valAddr, timeIncreaseSeconds)
 }
 
+func (env *TestEnv) GetValidatorAddress() string {
+	return env.App.StakingKeeper.GetAllValidators(env.Ctx)[0].OperatorAddress
+}
+
 // beginNewBlockWithProposer begins a new block with a proposer.
 func (env *TestEnv) beginNewBlockWithProposer(executeNextEpoch bool, proposer sdk.ValAddress, timeIncreaseSeconds uint64) {
 	validator, found := env.App.StakingKeeper.GetValidator(env.Ctx, proposer)
