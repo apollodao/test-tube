@@ -29,6 +29,9 @@ import (
 	// cosmwasm-testing
 	"github.com/osmosis-labs/test-tube/osmosis-test-tube/result"
 	"github.com/osmosis-labs/test-tube/osmosis-test-tube/testenv"
+
+	// osmosis
+	superfluidtypes "github.com/osmosis-labs/osmosis/v14/x/superfluid/types"
 )
 
 var (
@@ -179,6 +182,18 @@ func WhitelistAddressForForceUnlock(envId uint64, address string) {
 	EndBlock(envId)
 }
 
+//export AddSuperfluidLPShare
+func AddSuperfluidLPShare(envId uint64, denom string) {
+	BeginBlock(envId)
+	env := loadEnv(envId)
+
+	superfluid_asset := superfluidtypes.SuperfluidAsset{denom, 1}
+
+	env.App.SuperfluidKeeper.AddNewSuperfluidAsset(env.Ctx, superfluid_asset)
+	envRegister.Store(envId, env)
+	EndBlock(envId)
+}
+
 //export AccountSequence
 func AccountSequence(envId uint64, bech32Address string) uint64 {
 	env := loadEnv(envId)
@@ -236,6 +251,12 @@ func Simulate(envId uint64, base64TxBytes string) *C.char { // => base64GasInfo
 	}
 
 	return encodeBytesResultBytes(bz)
+}
+
+//export GetValidatorAddress
+func GetValidatorAddress(envId uint64) *C.char {
+	env := loadEnv(envId)
+	return C.CString(env.GetValidatorAddress())
 }
 
 // ========= utils =========

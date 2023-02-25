@@ -227,6 +227,9 @@ extern "C" {
     pub fn WhitelistAddressForForceUnlock(envId: GoUint64, address: GoString);
 }
 extern "C" {
+    pub fn AddSuperfluidLPShare(envId: GoUint64, denom: GoString);
+}
+extern "C" {
     pub fn Execute(envId: GoUint64, base64ReqDeliverTx: GoString) -> *mut ::std::os::raw::c_char;
 }
 extern "C" {
@@ -244,4 +247,7 @@ extern "C" {
 }
 extern "C" {
     pub fn Simulate(envId: GoUint64, base64TxBytes: GoString) -> *mut ::std::os::raw::c_char;
+}
+extern "C" {
+    pub fn GetValidatorAddress(envId: GoUint64) -> *mut ::std::os::raw::c_char;
 }
