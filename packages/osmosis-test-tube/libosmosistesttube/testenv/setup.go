@@ -30,6 +30,8 @@ import (
 
 	// osmosis
 	"github.com/osmosis-labs/osmosis/v14/app"
+	incentivestypes "github.com/osmosis-labs/osmosis/v14/x/incentives/types"
+	poolincentivestypes "github.com/osmosis-labs/osmosis/v14/x/pool-incentives/types"
 )
 
 type TestEnv struct {
@@ -62,9 +64,11 @@ func SetupOsmosisApp() *app.OsmosisApp {
 		app.GetWasmEnabledProposals(),
 		app.EmptyWasmOpts,
 	)
-	genesisState := app.NewDefaultGenesisState()
 
 	encCfg := app.MakeEncodingConfig()
+	genesisState := app.NewDefaultGenesisState()
+
+	// Set up Wasm genesis state
 	wasmGen := wasm.GenesisState{
 		Params: wasmtypes.Params{
 			// Allow store code without gov
@@ -72,8 +76,38 @@ func SetupOsmosisApp() *app.OsmosisApp {
 			InstantiateDefaultPermission: wasmtypes.AccessTypeEverybody,
 		},
 	}
-
 	genesisState[wasm.ModuleName] = encCfg.Marshaler.MustMarshalJSON(&wasmGen)
+
+	// Set up staking genesis state
+	stakingParams := stakingtypes.DefaultParams()
+	stakingParams.UnbondingTime = time.Hour * 24 * 7 * 2 // 2 weeks
+	stakingGen := stakingtypes.GenesisState{
+		Params: stakingParams,
+	}
+	genesisState[stakingtypes.ModuleName] = encCfg.Marshaler.MustMarshalJSON(&stakingGen)
+
+	// Set up incentive genesis state
+	lockableDurations := []time.Duration{
+		time.Hour * 24,      // 1 day
+		time.Hour * 24 * 7,  // 7 day
+		time.Hour * 24 * 14, // 14 days
+	}
+	incentivesParams := incentivestypes.DefaultParams()
+	incentivesParams.DistrEpochIdentifier = "day"
+	incentivesGen := incentivestypes.GenesisState{
+		Params:            incentivesParams,
+		LockableDurations: lockableDurations,
+	}
+	genesisState[incentivestypes.ModuleName] = encCfg.Marshaler.MustMarshalJSON(&incentivesGen)
+
+	// Set up pool incentives genesis state
+	poolIncentivesParams := poolincentivestypes.DefaultParams()
+	poolIncentivesParams.MintedDenom = "uosmo"
+	poolIncentivesGen := poolincentivestypes.GenesisState{
+		Params:            poolIncentivesParams,
+		LockableDurations: lockableDurations,
+	}
+	genesisState[poolincentivestypes.ModuleName] = encCfg.Marshaler.MustMarshalJSON(&poolIncentivesGen)
 
 	stateBytes, err := json.MarshalIndent(genesisState, "", " ")
 
