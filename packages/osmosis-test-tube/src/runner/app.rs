@@ -1,15 +1,14 @@
 use cosmrs::Any;
-use std::ffi::CString;
 
 use cosmwasm_std::Coin;
 
 use prost::Message;
 use test_tube::account::SigningAccount;
 
-use test_tube::bindings::GetValidatorAddress;
+use test_tube::bindings::AddSuperfluidLPShare;
 use test_tube::runner::result::{RunnerExecuteResult, RunnerResult};
 use test_tube::runner::Runner;
-use test_tube::{BaseApp, DecodeError};
+use test_tube::{redefine_as_go_string, BaseApp};
 
 const FEE_DENOM: &str = "uosmo";
 const OSMO_ADDRESS_PREFIX: &str = "osmo";
@@ -42,6 +41,13 @@ impl OsmosisTestApp {
     /// Get the current block time
     pub fn get_block_time_nanos(&self) -> i64 {
         self.inner.get_block_time_nanos()
+    }
+
+    pub fn add_superfluid_lp_share(&self, denom: &str) {
+        redefine_as_go_string!(denom);
+        unsafe {
+            AddSuperfluidLPShare(self.inner.id(), denom);
+        }
     }
 
     /// Get the first validator address

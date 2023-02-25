@@ -32,8 +32,10 @@ import (
 	// cosmwasm-testing
 	"github.com/osmosis-labs/test-tube/osmosis-test-tube/result"
 	"github.com/osmosis-labs/test-tube/osmosis-test-tube/testenv"
+
 	// osmosis
 	// lockuptypes "github.com/osmosis-labs/osmosis/v15/x/lockup/types"
+	superfluidtypes "github.com/osmosis-labs/osmosis/v15/x/superfluid/types"
 )
 
 var (
@@ -180,6 +182,18 @@ func Query(envId uint64, path, base64QueryMsgBytes string) *C.char {
 func GetBlockTime(envId uint64) int64 {
 	env := loadEnv(envId)
 	return env.Ctx.BlockTime().UnixNano()
+}
+
+//export AddSuperfluidLPShare
+func AddSuperfluidLPShare(envId uint64, denom string) {
+	BeginBlock(envId)
+	env := loadEnv(envId)
+
+	superfluid_asset := superfluidtypes.SuperfluidAsset{denom, 1}
+
+	env.App.SuperfluidKeeper.AddNewSuperfluidAsset(env.Ctx, superfluid_asset)
+	envRegister.Store(envId, env)
+	EndBlock(envId)
 }
 
 //export AccountSequence
