@@ -29,6 +29,9 @@ import (
 	// cosmwasm-testing
 	"github.com/osmosis-labs/test-tube/osmosis-test-tube/result"
 	"github.com/osmosis-labs/test-tube/osmosis-test-tube/testenv"
+
+	// osmosis
+	superfluidtypes "github.com/osmosis-labs/osmosis/v14/x/superfluid/types"
 )
 
 var (
@@ -175,6 +178,18 @@ func WhitelistAddressForForceUnlock(envId uint64, address string) {
 	params := env.App.LockupKeeper.GetParams(env.Ctx)
 	params.ForceUnlockAllowedAddresses = append(params.ForceUnlockAllowedAddresses, address)
 	env.App.LockupKeeper.SetParams(env.Ctx, params)
+	envRegister.Store(envId, env)
+	EndBlock(envId)
+}
+
+//export AddSuperfluidLPShare
+func AddSuperfluidLPShare(envId uint64, denom string) {
+	BeginBlock(envId)
+	env := loadEnv(envId)
+
+	superfluid_asset := superfluidtypes.SuperfluidAsset{denom, 1}
+
+	env.App.SuperfluidKeeper.AddNewSuperfluidAsset(env.Ctx, superfluid_asset)
 	envRegister.Store(envId, env)
 	EndBlock(envId)
 }
