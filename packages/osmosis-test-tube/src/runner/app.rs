@@ -1,13 +1,17 @@
 use cosmrs::Any;
+use std::ffi::CString;
+
 use cosmwasm_std::Coin;
 
 use prost::Message;
 use test_tube::account::SigningAccount;
 
-use test_tube::bindings::WhitelistAddressForForceUnlock;
+use test_tube::bindings::{
+    AddSuperfluidLPShare, GetValidatorAddress, WhitelistAddressForForceUnlock,
+};
 use test_tube::runner::result::{RunnerExecuteResult, RunnerResult};
 use test_tube::runner::Runner;
-use test_tube::{redefine_as_go_string, BaseApp};
+use test_tube::{redefine_as_go_string, BaseApp, DecodeError};
 
 const FEE_DENOM: &str = "uosmo";
 const OSMO_ADDRESS_PREFIX: &str = "osmo";
@@ -43,6 +47,19 @@ impl OsmosisTestApp {
         unsafe {
             WhitelistAddressForForceUnlock(self.inner.id(), address);
         }
+    }
+
+    /// Get the first validator address
+    pub fn get_first_validator_address(&self) -> RunnerResult<String> {
+        let addr = unsafe {
+            let addr = GetFirstValidatorAddress(self.inner.id());
+            CString::from_raw(addr)
+        }
+        .to_str()
+        .map_err(DecodeError::Utf8Error)?
+        .to_string();
+
+        Ok(addr)
     }
 
     /// Increase the time of the blockchain by the given number of seconds.

@@ -314,6 +314,12 @@ func GetParamSet(envId uint64, subspaceName, typeUrl string) *C.char {
 	return encodeBytesResultBytes(bz)
 }
 
+//export GetValidatorAddress
+func GetFirstValidatorAddress(envId uint64) *C.char {
+	env := loadEnv(envId)
+	return C.CString(env.GetValidatorAddresses()[0])
+}
+
 // ========= utils =========
 
 func loadEnv(envId uint64) testenv.TestEnv {

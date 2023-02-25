@@ -259,3 +259,6 @@ extern "C" {
         typeUrl: GoString,
     ) -> *mut ::std::os::raw::c_char;
 }
+extern "C" {
+    pub fn GetValidatorAddress(envId: GoUint64) -> *mut ::std::os::raw::c_char;
+}
