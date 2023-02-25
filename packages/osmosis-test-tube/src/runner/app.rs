@@ -49,6 +49,13 @@ impl OsmosisTestApp {
         }
     }
 
+    pub fn add_superfluid_lp_share(&self, denom: &str) {
+        redefine_as_go_string!(denom);
+        unsafe {
+            AddSuperfluidLPShare(self.inner.id(), denom);
+        }
+    }
+
     /// Get the first validator address
     pub fn get_first_validator_address(&self) -> RunnerResult<String> {
         let addr = unsafe {
