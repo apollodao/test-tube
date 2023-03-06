@@ -251,3 +251,6 @@ extern "C" {
 extern "C" {
     pub fn GetValidatorAddress(envId: GoUint64) -> *mut ::std::os::raw::c_char;
 }
+extern "C" {
+    pub fn GetBlockTime(envId: GoUint64) -> GoInt64;
+}

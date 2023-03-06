@@ -5,7 +5,7 @@ use cosmwasm_std::Coin;
 use test_tube::account::SigningAccount;
 
 use test_tube::bindings::{
-    AddSuperfluidLPShare, GetValidatorAddress, WhitelistAddressForForceUnlock,
+    AddSuperfluidLPShare, GetBlockTime, GetValidatorAddress, WhitelistAddressForForceUnlock,
 };
 use test_tube::runner::result::{RunnerExecuteResult, RunnerResult};
 use test_tube::runner::Runner;
@@ -37,6 +37,11 @@ impl OsmosisTestApp {
                 DEFAULT_GAS_ADJUSTMENT,
             ),
         }
+    }
+
+    /// Get the current block time
+    pub fn get_block_time_nanos(&self) -> i64 {
+        unsafe { GetBlockTime(self.inner.id()) }
     }
 
     /// Whitelist an address for force unlock
