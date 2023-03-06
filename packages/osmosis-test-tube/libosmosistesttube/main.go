@@ -188,6 +188,12 @@ func WhitelistAddressForForceUnlock(envId uint64, address string) {
 	EndBlock(envId)
 }
 
+//export GetBlockTime
+func GetBlockTime(envId uint64) int64 {
+	env := loadEnv(envId)
+	return env.Ctx.BlockTime().UnixNano()
+}
+
 //export AddSuperfluidLPShare
 func AddSuperfluidLPShare(envId uint64, denom string) {
 	BeginBlock(envId)
