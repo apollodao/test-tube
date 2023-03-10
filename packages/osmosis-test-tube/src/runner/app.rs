@@ -7,7 +7,8 @@ use prost::Message;
 use test_tube::account::SigningAccount;
 
 use test_tube::bindings::{
-    AddSuperfluidLPShare, GetBlockTime, GetValidatorAddress, WhitelistAddressForForceUnlock,
+    AddSuperfluidLPShare, GetBlockTime, GetValidatorAddress, IncreaseTime,
+    WhitelistAddressForForceUnlock,
 };
 use test_tube::runner::result::{RunnerExecuteResult, RunnerResult};
 use test_tube::runner::Runner;
@@ -38,6 +39,13 @@ impl OsmosisTestApp {
                 OSMO_ADDRESS_PREFIX,
                 DEFAULT_GAS_ADJUSTMENT,
             ),
+        }
+    }
+
+    /// Increase the time of the blockchain by the given number of seconds.
+    pub fn increase_time(&self, seconds: u64) {
+        unsafe {
+            IncreaseTime(self.inner.id(), seconds.try_into().unwrap());
         }
     }
 
@@ -72,11 +80,6 @@ impl OsmosisTestApp {
         .to_string();
 
         Ok(addr)
-    }
-
-    /// Increase the time of the blockchain by the given number of seconds.
-    pub fn increase_time(&self, seconds: u64) {
-        self.inner.increase_time(seconds)
     }
 
     /// Initialize account with initial balance of any coins.
