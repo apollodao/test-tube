@@ -64,7 +64,7 @@ impl OsmosisTestApp {
     /// Get the first validator address
     pub fn get_first_validator_address(&self) -> RunnerResult<String> {
         let addr = unsafe {
-            let addr = GetFirstValidatorAddress(self.inner.id());
+            let addr = GetValidatorAddress(self.inner.id(), 0);
             CString::from_raw(addr)
         }
         .to_str()

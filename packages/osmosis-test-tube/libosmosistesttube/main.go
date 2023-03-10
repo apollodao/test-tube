@@ -334,9 +334,9 @@ func GetParamSet(envId uint64, subspaceName, typeUrl string) *C.char {
 }
 
 //export GetValidatorAddress
-func GetFirstValidatorAddress(envId uint64) *C.char {
+func GetValidatorAddress(envId uint64, n int32) *C.char {
 	env := loadEnv(envId)
-	return C.CString(env.GetValidatorAddresses()[0])
+	return C.CString(env.GetValidatorAddresses()[n])
 }
 
 // ========= utils =========
