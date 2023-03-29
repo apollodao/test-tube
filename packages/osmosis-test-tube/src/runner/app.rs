@@ -144,6 +144,7 @@ impl<'a> Runner<'a> for OsmosisTestApp {
 
 #[cfg(test)]
 mod tests {
+    use cosmrs::Any;
     use osmosis_std::types::cosmos::bank::v1beta1::QueryAllBalancesResponse;
     use prost::Message;
     use std::option::Option::None;
