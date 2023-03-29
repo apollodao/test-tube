@@ -1,5 +1,8 @@
 use crate::runner::Runner;
 
+pub mod bank;
+pub mod wasm;
+
 #[macro_use]
 pub mod macros;
 
