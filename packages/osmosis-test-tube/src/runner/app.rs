@@ -3,6 +3,7 @@ use cosmrs::Any;
 use cosmwasm_std::Coin;
 
 use prost::Message;
+use serde::de::DeserializeOwned;
 use test_tube::account::SigningAccount;
 
 use test_tube::bindings::AddSuperfluidLPShare;
@@ -124,7 +125,7 @@ impl<'a> Runner<'a> for OsmosisTestApp {
     fn query<Q, R>(&self, path: &str, q: &Q) -> RunnerResult<R>
     where
         Q: ::prost::Message,
-        R: ::prost::Message + Default,
+        R: ::prost::Message + DeserializeOwned + Default,
     {
         self.inner.query(path, q)
     }
@@ -147,9 +148,9 @@ mod tests {
     use prost::Message;
     use std::option::Option::None;
 
-    use cosmrs::proto::cosmos::bank::v1beta1::QueryAllBalancesRequest;
-    use cosmrs::Any;
+    // use cosmrs::Any;
     use cosmwasm_std::{attr, coins, Coin};
+    use osmosis_std::types::cosmos::bank::v1beta1::QueryAllBalancesRequest;
 
     use osmosis_std::types::osmosis::gamm::v1beta1::QueryTotalSharesRequest;
     use osmosis_std::types::osmosis::lockup::{
