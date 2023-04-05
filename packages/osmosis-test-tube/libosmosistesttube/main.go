@@ -178,6 +178,17 @@ func Query(envId uint64, path, base64QueryMsgBytes string) *C.char {
 	return encodeBytesResultBytes(res.Value)
 }
 
+//export WhitelistAddressForForceUnlock
+func WhitelistAddressForForceUnlock(envId uint64, address string) {
+	BeginBlock(envId)
+	env := loadEnv(envId)
+	params := env.App.LockupKeeper.GetParams(env.Ctx)
+	params.ForceUnlockAllowedAddresses = append(params.ForceUnlockAllowedAddresses, address)
+	env.App.LockupKeeper.SetParams(env.Ctx, params)
+	envRegister.Store(envId, env)
+	EndBlock(envId)
+}
+
 //export GetBlockTime
 func GetBlockTime(envId uint64) int64 {
 	env := loadEnv(envId)

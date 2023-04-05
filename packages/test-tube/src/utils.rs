@@ -46,7 +46,7 @@ pub fn osmosis_coins_to_coins(
     coins: &[osmosis_std::types::cosmos::base::v1beta1::Coin],
 ) -> Vec<Coin> {
     coins
-        .into_iter()
+        .iter()
         .map(|c| c.clone().try_into())
         .collect::<StdResult<_>>()
         .unwrap()
@@ -68,9 +68,9 @@ pub fn bank_msg_to_any(msg: &BankMsg, signer: &SigningAccount) -> Result<cosmrs:
         BankMsg::Send { to_address, amount } => {
             let type_url = "/cosmos.bank.v1beta1.MsgSend";
             let msg = MsgSend {
-                from_address: signer.address().to_string(),
+                from_address: signer.address(),
                 to_address: to_address.to_string(),
-                amount: coins_to_proto(&amount),
+                amount: coins_to_proto(amount),
             };
             msg_to_any(type_url, &msg)
         }
@@ -90,7 +90,7 @@ pub fn wasm_msg_to_any(msg: &WasmMsg, signer: &SigningAccount) -> Result<cosmrs:
             "/cosmwasm.wasm.v1.MsgExecuteContract",
             &MsgExecuteContract {
                 contract: contract_addr.clone(),
-                funds: coins_to_proto(&funds),
+                funds: coins_to_proto(funds),
                 sender: signer.address(),
                 msg: msg.to_vec(),
             },
@@ -109,7 +109,7 @@ pub fn wasm_msg_to_any(msg: &WasmMsg, signer: &SigningAccount) -> Result<cosmrs:
                 code_id: *code_id,
                 label: label.clone(),
                 msg: msg.to_vec(),
-                funds: coins_to_proto(&funds),
+                funds: coins_to_proto(funds),
             },
         ),
         WasmMsg::Migrate {

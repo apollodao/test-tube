@@ -5,8 +5,9 @@ use osmosis_std::types::osmosis::gamm::poolmodels::stableswap::v1beta1::{
 };
 use osmosis_std::types::osmosis::gamm::{
     poolmodels::balancer::v1beta1::{MsgCreateBalancerPool, MsgCreateBalancerPoolResponse},
-    v1beta1::{PoolAsset, PoolParams, QueryPoolRequest, QueryPoolResponse},
+    v1beta1::{PoolAsset, PoolParams},
 };
+use osmosis_std::types::osmosis::poolmanager::v1beta1::{PoolRequest, PoolResponse};
 use prost::Message;
 use test_tube::{fn_execute, fn_query};
 
@@ -41,7 +42,7 @@ where
     }
 
     fn_query! {
-        _query_pool ["/osmosis.gamm.v1beta1.Query/Pool"]: QueryPoolRequest => QueryPoolResponse
+        _query_pool ["/osmosis.poolmanager.v1beta1.Query/Pool"]: PoolRequest => PoolResponse
     }
 
     pub fn create_basic_pool(
@@ -54,7 +55,7 @@ where
                 sender: signer.address(),
                 pool_params: Some(PoolParams {
                     swap_fee: "10000000000000000".to_string(),
-                    exit_fee: "10000000000000000".to_string(),
+                    exit_fee: "0".to_string(),
                     smooth_weight_change_params: None,
                 }),
                 pool_assets: initial_liquidity
@@ -74,7 +75,7 @@ where
     }
 
     pub fn query_pool(&self, pool_id: u64) -> RunnerResult<gamm::v1beta1::Pool> {
-        let res = self._query_pool(&QueryPoolRequest { pool_id })?;
+        let res = self._query_pool(&PoolRequest { pool_id })?;
         gamm::v1beta1::Pool::decode(res.pool.unwrap().value.as_slice())
             .map_err(DecodeError::ProtoDecodeError)
             .map_err(RunnerError::DecodeError)
