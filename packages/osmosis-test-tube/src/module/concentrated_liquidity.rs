@@ -3,7 +3,7 @@ use osmosis_std::types::osmosis::concentratedliquidity::v1beta1::{
     MsgCreateConcentratedPool, MsgCreateConcentratedPoolResponse, MsgCreateIncentive,
     MsgCreateIncentiveResponse, MsgCreatePosition, MsgCreatePositionResponse, MsgWithdrawPosition,
     MsgWithdrawPositionResponse, QueryClaimableFeesRequest, QueryClaimableFeesResponse,
-    QueryLiquidityDepthsForRangeRequest, QueryLiquidityDepthsForRangeResponse, QueryParamsRequest,
+    QueryLiquidityNetInDirectionRequest, QueryLiquidityNetInDirectionResponse, QueryParamsRequest,
     QueryParamsResponse, QueryPoolsRequest, QueryPoolsResponse, QueryPositionByIdRequest,
     QueryPositionByIdResponse, QueryTotalLiquidityForRangeRequest,
     QueryTotalLiquidityForRangeResponse, QueryUserPositionsRequest, QueryUserPositionsResponse,
@@ -58,9 +58,9 @@ where
         pub query_params ["/osmosis.concentratedliquidity.v1beta1.Query/Params"]: QueryParamsRequest => QueryParamsResponse
     }
 
-    // query liquidity_depths_for_range
+    // query liquidity_net_in_direction
     fn_query! {
-        pub query_liquidity_depths_for_range ["/osmosis.concentratedliquidity.v1beta1.Query/LiquidityDepthsForRange"]: QueryLiquidityDepthsForRangeRequest => QueryLiquidityDepthsForRangeResponse
+        pub query_liquidity_depths_for_range ["/osmosis.concentratedliquidity.v1beta1.Query/LiquidityNetInDirection"]: QueryLiquidityNetInDirectionRequest => QueryLiquidityNetInDirectionResponse
     }
 
     // query user_positions
@@ -87,6 +87,7 @@ where
 #[cfg(test)]
 mod tests {
     use cosmwasm_std::Coin;
+    use osmosis_std::types::cosmos::base::v1beta1;
     use osmosis_std::types::osmosis::tokenfactory::v1beta1::{MsgCreateDenom, MsgMint};
     use test_tube::Account;
 
@@ -161,11 +162,11 @@ mod tests {
             .create_concentrated_pool(
                 MsgCreateConcentratedPool {
                     sender: signer.address(),
-                    denom0,
-                    denom1,
+                    denom0: denom0.clone(),
+                    denom1: denom1.clone(),
                     tick_spacing: 1,
-                    precision_factor_at_price_one: "-10".to_string(),
                     swap_fee: "0".to_string(),
+                    exponent_at_price_one: "-10".to_string(),
                 },
                 &signer,
             )
@@ -174,5 +175,31 @@ mod tests {
             .pool_id;
 
         assert_eq!(pool_id, 1);
+
+        let position_id = concentrated_liquidity
+            .create_position(
+                MsgCreatePosition {
+                    pool_id,
+                    sender: signer.address(),
+                    lower_tick: 0,
+                    upper_tick: 100,
+                    token_desired0: Some(v1beta1::Coin {
+                        denom: denom0,
+                        amount: "10000000000".to_string(),
+                    }),
+                    token_desired1: Some(v1beta1::Coin {
+                        denom: denom1,
+                        amount: "10000000000".to_string(),
+                    }),
+                    token_min_amount0: "0".to_string(),
+                    token_min_amount1: "0".to_string(),
+                },
+                &signer,
+            )
+            .unwrap()
+            .data
+            .position_id;
+
+        assert_eq!(position_id, 1);
     }
 }
