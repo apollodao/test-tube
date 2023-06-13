@@ -35,7 +35,7 @@ import (
 
 	// osmosis
 	// lockuptypes "github.com/osmosis-labs/osmosis/v16/x/lockup/types"
-	superfluidtypes "github.com/osmosis-labs/osmosis/v16/x/superfluid/types"
+	superfluidtypes "github.com/osmosis-labs/osmosis/v15/x/superfluid/types"
 )
 
 var (
