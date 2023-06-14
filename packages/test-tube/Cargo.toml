@@ -12,7 +12,7 @@ version = "0.1.2"
 base64 = "0.13.0"
 cosmrs = {version = "0.9.0", features = ["cosmwasm", "rpc"]}
 cosmwasm-std = { version = "1.1.2", features = ["stargate"] }
-osmosis-std = { git = "https://github.com/apollodao/osmosis-rust.git", rev = "9bb297a02b39c34afd3040d6bade9b2ca9186759" }
+osmosis-std = { git = "https://github.com/apollodao/osmosis-rust.git", rev = "9682deeb2e6869f7d0f9736fbe4e0ceef2d56fb7" }
 prost = "0.11.0"
 serde = "1.0.144"
 serde_json = "1.0.85"
