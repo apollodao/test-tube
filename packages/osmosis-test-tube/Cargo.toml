@@ -12,6 +12,9 @@ exclude = [
   "test_artifacts",
 ]
 
+[features]
+backtraces = ["cosmwasm-std/backtraces", "osmosis-std/backtraces", "test-tube/backtraces"]
+
 [dependencies]
 base64 = "0.13.0"
 cosmrs = {version = "0.9.0", features = ["cosmwasm"]}
