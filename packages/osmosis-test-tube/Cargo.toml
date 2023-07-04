@@ -16,7 +16,7 @@ exclude = [
 base64 = "0.13.0"
 cosmrs = {version = "0.9.0", features = ["cosmwasm"]}
 cosmwasm-std = "1.1.2"
-osmosis-std = { git = "https://github.com/apollodao/osmosis-rust.git", rev = "9682deeb2e6869f7d0f9736fbe4e0ceef2d56fb7" }
+osmosis-std = { git = "https://github.com/apollodao/osmosis-rust.git", rev = "cd3e84201b08d168ee848acbebc85b1da7cab3fa" }
 prost = "0.11.0"
 serde = "1.0.144"
 serde_json = "1.0.85"
