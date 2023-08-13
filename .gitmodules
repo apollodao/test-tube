@@ -3,3 +3,7 @@
 	url = https://github.com/osmosis-labs/osmosis.git
 	branch = main
 
+[submodule "packages/neutron-test-tube/neutron"]
+	path = packages/neutron-test-tube/neutron
+	url = https://github.com/neutron-org/neutron.git
+	branch = main

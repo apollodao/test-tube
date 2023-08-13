@@ -1,7 +1,7 @@
 #![cfg(feature = "wasm")]
 
 use cosmwasm_std::Coin;
-use osmosis_std::types::cosmwasm::wasm::v1::{
+use neutron_std::types::cosmwasm::wasm::v1::{
     AccessConfig, MsgExecuteContract, MsgExecuteContractResponse, MsgInstantiateContract,
     MsgInstantiateContractResponse, MsgStoreCode, MsgStoreCodeResponse,
     QuerySmartContractStateRequest, QuerySmartContractStateResponse,
@@ -67,7 +67,7 @@ where
                 msg: serde_json::to_vec(msg).map_err(EncodeError::JsonEncodeError)?,
                 funds: funds
                     .iter()
-                    .map(|c| osmosis_std::types::cosmos::base::v1beta1::Coin {
+                    .map(|c| neutron_std::types::cosmos::base::v1beta1::Coin {
                         denom: c.denom.parse().unwrap(),
                         amount: format!("{}", c.amount.u128()),
                     })
@@ -94,7 +94,7 @@ where
                 msg: serde_json::to_vec(msg).map_err(EncodeError::JsonEncodeError)?,
                 funds: funds
                     .iter()
-                    .map(|c| osmosis_std::types::cosmos::base::v1beta1::Coin {
+                    .map(|c| neutron_std::types::cosmos::base::v1beta1::Coin {
                         denom: c.denom.parse().unwrap(),
                         amount: format!("{}", c.amount.u128()),
                     })

@@ -8,6 +8,12 @@
     },
     {
       "path": "packages/osmosis-test-tube/libosmosistesttube"
+    },
+    {
+      "path": "packages/neutron-test-tube"
+    },
+    {
+      "path": "packages/neutron-test-tube/libneutrontesttube"
     }
   ],
   "settings": {}
